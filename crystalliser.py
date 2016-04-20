@@ -1,8 +1,6 @@
 import sys
-import Image
-import tweepy
-import requests
-from StringIO import StringIO
+from PIL import Image
+# from StringIO import StringIO
 import pickle
 
 #Twice the actual chunk size so we can downscale for anti-aliasing
@@ -61,40 +59,7 @@ def drawBottomHalf(xOrigin, yOrigin, pixelMap):
         for x in range(((chunkSize - 1 - y) + (y+1)%2),chunkSize):
             pixelMap[xOrigin+x,yOrigin+y] = tuple(averageChunkRGBA)
 
-
-## Twitter API stuff
-
-def getAPI(consumerKey, consumerSecret, accessKey, accessSecret):
-    auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
-    auth.set_access_token(accessKey, accessSecret)
-    api = tweepy.API(auth)
-    return api
-
-def replyToMentions(api, sinceID):
-    mentions = api.mentions_timeline(since_id=sinceID)
-
-    if(len(mentions) > 0):
-        #Pickle the first mention as the new sinceID
-        pickle.dump(mentions[0].id_str, open("sinceID.p", "wb"))
-
-        for mention in mentions:
-            tweetID = mention.id_str
-            media = mention.entities.get("media",[{}])[0]
-            user = mention.user.screen_name
-
-            ##First download the Image
-            resp = requests.get(media["media_url"])
-            image = Image.open(StringIO(resp.content))
-
-            #crystallise it
-            image = crystallise(image)
-
-            #Save it
-            image.save('output.png')
-
-            #Tweet it back at the user
-            api.update_with_media('output.png',status='@' + user,in_reply_to_status_id=tweetID)
-
-api = getAPI(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
-sinceID = pickle.load(open("sinceID.p", "rb"))
-replyToMentions(api, sinceID)
+# blargh
+image = Image.open(sys.argv[1])
+image = crystallise(image)
+image.save('cryst.png')
