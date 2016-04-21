@@ -10,7 +10,7 @@ about the project on her site.
 
 ## Usage
 ```
-$ python input.png output.png
+$ python crytalliser.py input.png output.png
 ```
 
 ## Example input
