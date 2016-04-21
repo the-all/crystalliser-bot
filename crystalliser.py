@@ -4,7 +4,7 @@ from PIL import Image
 import pickle
 
 #Twice the actual chunk size so we can downscale for anti-aliasing
-chunkSize = 20
+chunkSize = 8
 
 def crystallise(image):
 
@@ -62,4 +62,4 @@ def drawBottomHalf(xOrigin, yOrigin, pixelMap):
 # blargh
 image = Image.open(sys.argv[1])
 image = crystallise(image)
-image.save('cryst.png')
+image.save(sys.argv[2])
